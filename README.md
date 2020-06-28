@@ -1,13 +1,17 @@
 # machine-learning-meets-VCV-rack
 
+## Introduction
+The project is a small attemp to find a connection between the virtual modular synthesizers world and some machine learning techniques, going from simple MFCC analysis to Magenta's Wavenet.
 
-This projects performs a comparative audio analysis between different samples:
-- a single target sample: in my case it was a bird sound.
+The goal is: given a target sound, our program will return a sound extracted by a [VCV rack](https://vcvrack.com/) patch. This resulting sound will be as close as possible to the target one.
+
+
+The idea behind is to set a comparative audio analysis between different samples:
+- a single target sample: in my case it is a bird sound.
 - a set of sounds extracted from a [VCV Rack](https://vcvrack.com/) patch. See the folder 'VCV patch'.
+Check out [here](https://medium.com/@LeonFedden/comparative-audio-analysis-with-wavenet-mfccs-umap-t-sne-and-pca-cb8237bfce2f) how the algorithm works.
 
-Our goal is, given a target sound, to find a set of parameters for that patch whose output will be the most similar to the target.
-
-
+## Steps
 The program is divided in different steps, each corresponding to different scripts:
 
 1. sendMIDi.py
@@ -33,7 +37,8 @@ The program is divided in different steps, each corresponding to different scrip
     PS: feel free to reassign these CCs to any other parameters or different module(s), just make sure to map them using the MIDI Map module!
     PS2 : this randomisation was tailored to work with the Macro Oscillator 2, so please make sure to change the labels for the CCs as well.
 
-![alt text](https://github.com/lorenzoPazuzu/machine-learning-meets-VCV-rack/blob/master/images/screenshot_patch.png?raw=true)
+
+<img src="https://github.com/lorenzoPazuzu/machine-learning-meets-VCV-rack/blob/master/images/screenshot_patch.png" width="75%" height="60%">
 
 2. `trimming.py`
 
@@ -55,10 +60,10 @@ By running this script you'll execute both `plotting.py` and `audio_2_z.py`. It 
 
 The columns correspond to different numbers of T-SNE iterations (500, 1000, 2000, 5000) while the row correspond to different values of perplexity (5, 30, 50, 100), which relates to the number of nearest neighbours.
 
-![alt text](https://github.com/lorenzoPazuzu/machine-learning-meets-VCV-rack/blob/master/images/mfcc-wavenet_176samples.png?raw=true)
+<img src="https://github.com/lorenzoPazuzu/machine-learning-meets-VCV-rack/blob/master/images/mfcc-wavenet_176samples.png" width="75%" height="75%">
 
 5. `read_patch.py`
 
 This script prints the name of the closest files (patch{number}.wav) to the target sound, according to the features used (MFCC vs Wavenet) and the dimensionality reduction algorithms (t-SNE or PCA).
 
-![alt text](https://github.com/lorenzoPazuzu/machine-learning-meets-VCV-rack/blob/master/images/prints.png?raw=true)
+<img src="https://github.com/lorenzoPazuzu/machine-learning-meets-VCV-rack/blob/master/images/prints.png" width="50%" height="30%">
