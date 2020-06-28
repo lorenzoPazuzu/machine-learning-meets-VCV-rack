@@ -3,40 +3,62 @@
 
 This projects performs a comparative audio analysis between different samples:
 - a single target sample: in my case it was a bird sound.
-- a big set of sounds extracted from a VCV Rack patch. (https://vcvrack.com/) See the folder 'VCV patch'.
+- a set of sounds extracted from a [VCV Rack](https://vcvrack.com/) patch. See the folder 'VCV patch'.
 
 Our goal is, given a target sound, to find a set of parameters for that patch whose output will be the most similar to the target.
 
 
 The program is divided in different steps, each corresponding to different scripts:
 
-1. `sendMIDi.py`
+1. sendMIDi.py
   - First open the VCV Rack patch in /VCV_patch/ML_vcv.
   - Then right click on the Recorder module and select a directory in which the file will be stored.
 
-`sendMIDi.py` uses `mido` library in order to randomise the parameters of Plaits module (Macro Oscillator 2 from Audible Instruents) through CCs thanks to `mido` library.
+  - `sendMIDi.py` uses `mido` library in order to randomise the parameters of Plaits module (Macro Oscillator 2 from Audible Instruents) through CCs thanks to `mido` library. This is the mapping between MIDI CCs and the patch knobs:
+    - CC0 : frequency;
+    - CC1 : harmonics;
+    - CC2 : timbre;
+    - CC3 : morph;
+    - CC4 : timbre env;
+    - CC5 : FM env;
+    - CC6 : morph env;
+    - CC7 : 8Vert knob;
+    - CC8 : LFO-1 Freq;
+    - CC127: master volume;
+    - CC126: recorder button;
 
-This is the mapping between MIDI CCs and the patch knobs:
-CC0 : frequency
-CC1 : harmonics
-CC2 : timbre
-CC3 : morph
+    All the sent CCs will be stored in `sent_cc.json`
+    
 
-CC4 : timbre env
-CC5 : FM env
-CC6 : morph env
+    PS: feel free to reassign these CCs to any other parameters or different module(s), just make sure to map them using the MIDI Map module!
+    PS2 : this randomisation was tailored to work with the Macro Oscillator 2, so please make sure to change the labels for the CCs as well.
 
-CC7 : 8Vert knob
-CC8 : LFO-1 Freq
+![alt text](https://github.com/lorenzoPazuzu/machine-learning-meets-VCV-rack/blob/master/images/screenshot_patch.png?raw=true)
 
-CC127: master volume
-CC126: recorder button
+2. `trimming.py`
 
-All the sent CCs will be stored in `sent_cc.json`
+This script uses `pydub` library in order to trim your long audio file into 1-second fragments, each corresponding to a different patch.
+When the trimming is finished, create a new directory called `VCV patches` into your main folder and drag all the chunks there.
 
-PS: feel free to reassign these CCs to any other parameters or different module(s), just make sure to map them using the MIDI Map module!
-PS2 : this randomisation was tailored to work with the Macro Oscillator 2, so please make sure to change the labels for the CCs as well.
+3. `audio_2_z.py`
 
-![alt text](https://github.com/lorenzoPazuzu/machine-learning-meets-VCV-rack/blob/master/images/screenshot_patch.jpg?raw=true)
+This is the core of the algorithm. Check it [here](https://medium.com/@LeonFedden/comparative-audio-analysis-with-wavenet-mfccs-umap-t-sne-and-pca-cb8237bfce2f) for more infos. We'll use `sklearn`, `numpy`, and Magenta's `wavenet`.
+In order to proceed, install [Magenta](https://magenta.tensorflow.org/) and download [this model's weights](http://download.magenta.tensorflow.org/models/nsynth/wavenet-ckpt.tar) to your working directory.
 
-2. 
+4. Add your target file!
+
+Now drag your target file (try with a bird sound and call it "bird.wav") on the VCV_patches folder together with all the chunks.
+
+4. `plotting.py`
+
+By running this script you'll execute both `plotting.py` and `audio_2_z.py`. It will return a **blue** dot for each sound/patch, plus a **red** dot for your target sound.
+
+The columns correspond to different numbers of T-SNE iterations (500, 1000, 2000, 5000) while the row correspond to different values of perplexity (5, 30, 50, 100), which relates to the number of nearest neighbours.
+
+![alt text](https://github.com/lorenzoPazuzu/machine-learning-meets-VCV-rack/blob/master/images/mfcc-wavenet_176samples.png?raw=true)
+
+5. `read_patch.py`
+
+This script prints the name of the closest files (patch{number}.wav) to the target sound, according to the features used (MFCC vs Wavenet) and the dimensionality reduction algorithms (t-SNE or PCA).
+
+![alt text](https://github.com/lorenzoPazuzu/machine-learning-meets-VCV-rack/blob/master/images/prints.png?raw=true)
