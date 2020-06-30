@@ -64,6 +64,6 @@ The columns correspond to different numbers of T-SNE iterations (500, 1000, 2000
 
 5. `read_patch.py`
 
-This script computes the Euclidean Distance and returns the name of the closest files (patch{number}.wav) to the target sound, for each of the encoding techniques used (MFCC vs Wavenet) and dimensionality reduction algorithms (t-SNE or PCA).
+This script computes the Euclidean Distance between the target sound and the closest neighbor. It returns the name of the closest file (patch{number}.wav) to the target sound in the plots, for each of the encoding techniques used (MFCC vs Wavenet) and dimensionality reduction algorithms (t-SNE or PCA).
 
 <img src="https://github.com/lorenzoPazuzu/machine-learning-meets-VCV-rack/blob/master/images/prints.png" width="50%" height="30%">
