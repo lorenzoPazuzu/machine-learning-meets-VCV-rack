@@ -11,7 +11,7 @@ The idea behind is to set a comparative audio analysis between different samples
 - a set of sounds extracted from a [VCV Rack](https://vcvrack.com/) patch. See the folder 'VCV patch'.
 Check out [here](https://medium.com/@LeonFedden/comparative-audio-analysis-with-wavenet-mfccs-umap-t-sne-and-pca-cb8237bfce2f) how the algorithm works.
 
-You can find the results of my small project here: https://soundcloud.com/lorenzo-minneci/sets/machine-learning-meets-vcv-rack
+You can find the results of my small project on my [SoundCloud Page](https://soundcloud.com/lorenzo-minneci/sets/machine-learning-meets-vcv-rack)
 
 ## Steps
 The program is divided in different steps, each corresponding to different scripts:
